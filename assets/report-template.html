@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>{{报告标题}}</title><style>
+:root{--paper:#FDFCF8;--ink:#1F3A5F;--ink2:#3C3C3C;--line:#DCD6C8;
+      --accent:#A8321E;--soft:#F1EEE4;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink2);
+     font-family:Georgia,"Times New Roman",serif;font-size:15px;line-height:1.62}
+.wrap{max-width:1080px;margin:0 auto;padding:44px 30px 90px}
+h1{font-size:27px;color:var(--ink);margin:0 0 6px;letter-spacing:.2px}
+.sub{color:#7A8794;font-size:13.5px;margin-bottom:30px}
+h2{font-size:20px;color:var(--ink);margin:44px 0 12px;padding-bottom:7px;
+   border-bottom:2px solid var(--line)}
+h3{font-size:16px;color:var(--ink);margin:26px 0 8px}
+p{margin:9px 0}
+code,.mono{font-family:Consolas,"Courier New",monospace;font-size:12.6px}
+code{background:var(--soft);padding:1px 5px;border-radius:3px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.6px}
+th{background:var(--soft);color:var(--ink);text-align:left;padding:7px 9px;
+   border-bottom:1.5px solid var(--line);font-weight:600}
+td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;font-family:Consolas,monospace;font-size:13px}
+tr:last-child td{border-bottom:none}
+.pass{color:#1E6B44;font-weight:600}
+.fail{color:var(--accent);font-weight:600}
+.warn{color:#8A6D1F;font-weight:600}
+.fig{margin:18px 0 6px;background:#fff;border:1px solid var(--line);
+     padding:10px;overflow-x:auto}
+.fig svg{display:block;max-width:100%;height:auto}
+.cap{font-size:12.6px;color:#7A8794;margin:6px 0 22px}
+pre{background:var(--soft);padding:13px 15px;overflow-x:auto;font-size:12.2px;
+    line-height:1.5;border-left:3px solid var(--ink)}
+.kpi{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0 6px}
+.kpi div{flex:1 1 148px;background:#fff;border:1px solid var(--line);padding:11px 13px}
+.kpi b{display:block;font-family:Consolas,monospace;font-size:19.5px;
+       color:var(--ink);font-weight:600}
+.kpi span{font-size:11.8px;color:#7A8794;letter-spacing:.3px}
+.eq{background:#fff;border-left:3px solid var(--ink);padding:9px 14px;
+    margin:10px 0;font-family:Consolas,monospace;font-size:12.8px}
+ol.o{margin:8px 0 0;padding-left:22px}
+ol.o>li{margin:14px 0}
+ol.o>li>b{color:var(--ink)}
+.tag{display:inline-block;font-size:11px;letter-spacing:.4px;padding:1px 7px;
+     border:1px solid var(--line);border-radius:10px;color:#7A8794;margin-left:6px}
+small{color:#7A8794}
+</style></head><body>
+<div class="wrap">
+
+<h1>{{H1：一句话说清这次做完了什么}}</h1>
+<div class="sub">{{日期}} &nbsp;|&nbsp; {{环境}} &nbsp;|&nbsp; {{主机}}</div>
+
+<h2>1&nbsp;&nbsp;结论</h2>
+<p>{{开头 2~3 句：几件事、彼此关系、是否并行。<br>
+   然后一句话点出最反直觉的那个结论。}}</p>
+
+<table>
+<tr><th>事项</th><th>真实原因</th><th>状态</th></tr>
+<tr><td><strong>{{事项 A}}</strong></td>
+    <td>{{根因，带关键数值；写清「不是 X，而是 Y」}}</td>
+    <td><span class="pass">已闭环</span><br><small>{{补充}}</small></td></tr>
+<tr><td><strong>{{事项 B}}</strong></td>
+    <td>{{…}}</td>
+    <td><span class="warn">部分闭环</span><br><small>{{还差什么}}</small></td></tr>
+</table>
+
+<div class="kpi">
+<div><span>{{指标名}}</span><b>{{前}} → {{后}}</b><small>{{口径}}</small></div>
+<div><span>{{指标名}}</span><b>{{数值}}</b><small>{{口径}}</small></div>
+<div><span>{{指标名}}</span><b>{{数值}}</b><small>{{口径}}</small></div>
+</div>
+
+<p><small>{{数据来源与口径说明：什么命令、什么单位、采样多少次。}}</small></p>
+
+<h2>2&nbsp;&nbsp;验收判据</h2>
+<table>
+<tr><th>项目</th><th class="n">判据</th><th class="n">实测</th><th>结论</th></tr>
+<tr><td>{{检查项}}</td><td class="n">{{阈值}}</td><td class="n">{{实测值}}</td>
+    <td class="pass">PASS</td></tr>
+<tr><td>{{检查项}}</td><td class="n">{{阈值}}</td><td class="n">{{实测值}}</td>
+    <td class="fail">FAIL（{{原因}}）</td></tr>
+</table>
+
+<h2>3&nbsp;&nbsp;{{事项一：标题用现象而非结论}}</h2>
+
+<h3>3.1&nbsp;现象与分流</h3>
+<p>{{用户的原始描述 → 这句话能排除掉哪几种可能 → 剩下哪一类。}}</p>
+<table>
+<tr><th>可能机制</th><th>判别特征</th><th>判定</th></tr>
+<tr><td>{{假设 A}}</td><td>{{什么现象能区分}}</td><td class="fail">排除</td></tr>
+<tr><td>{{假设 B}}</td><td>{{…}}</td><td class="pass">高度吻合</td></tr>
+</table>
+
+<h3>3.2&nbsp;证据</h3>
+<p>{{实测数据 / 扫描结果 / 日志片段。必须可复现。}}</p>
+
+<h3>3.3&nbsp;处置</h3>
+<p>{{改了什么、为什么这样改、改前先做了什么预防动作。}}</p>
+<div class="eq">{{改前值}}  →  {{改后值}}
+{{备份路径 / 回读验证方式}}</div>
+
+<h3>3.4&nbsp;结果</h3>
+<p>{{已生效 / 未闭环 / 待办。有回读就写回读。}}</p>
+
+<h2>4&nbsp;&nbsp;{{事项二}}</h2>
+{{按 3.1~3.4 同样结构展开}}
+
+<h2>5&nbsp;&nbsp;{{事项三}}</h2>
+{{按 3.1~3.4 同样结构展开}}
+
+<h2>6&nbsp;&nbsp;优化项</h2>
+<p>{{一句话说明体例：每条按 现象 → 定位与处置 → 结果 三段式；反证单独成条。}}</p>
+
+<ol class="o">
+<li><b>O1&nbsp;&nbsp;{{标题点明机制}}</b>
+<p><strong>现象</strong>：{{观察到什么，带数值或日志行}}</p>
+<p><strong>定位与处置</strong>：{{用什么命令找到的、改了什么、为什么这么改}}</p>
+<p><strong>结果</strong>：{{已生效 / 未闭环，附回读结果}}</p></li>
+
+<li><b>O2&nbsp;&nbsp;{{标题}}</b>
+<p><strong>现象</strong>：{{…}}</p>
+<p><strong>定位与处置</strong>：{{…}}</p>
+<p><strong>结果</strong>：{{…}}</p></li>
+
+<li><b>O3&nbsp;&nbsp;【反证】{{被排除的假设}}</b>
+<p><strong>假设</strong>：{{为什么看起来像}}</p>
+<p><strong>验证</strong>：{{用什么数据推翻了它}}</p>
+<p><strong>结果</strong>：排除。{{留下什么结论}}</p></li>
+</ol>
+
+<h2>7&nbsp;&nbsp;已知缺口</h2>
+<ol>
+<li><strong>{{未闭环项}}</strong>{{为什么没做完，需要什么条件才能做。}}</li>
+<li><strong>{{未验证项}}</strong>{{已过什么检查，但没做到哪一步。}}</li>
+<li><strong>{{仍是嫌疑项}}</strong>{{目前是强嫌疑而非实证，需要什么证据才能确认。}}</li>
+</ol>
+
+<h2>8&nbsp;&nbsp;文件与复现</h2>
+
+<h3>8.1&nbsp;产物清单</h3>
+<table>
+<tr><th>文件</th><th>类型</th><th>用途</th></tr>
+<tr><td><code>{{文件名}}</code></td><td>{{类型}}</td><td>{{一句话}}</td></tr>
+</table>
+
+<h3>8.2&nbsp;复现命令</h3>
+<p><strong>{{动作}}</strong></p>
+<pre>{{可直接粘贴的命令}}</pre>
+
+<h3>8.3&nbsp;还原到修改前</h3>
+<pre>{{还原命令或改回哪个值}}</pre>
+
+<h2>9&nbsp;&nbsp;依赖与知识清单</h2>
+<p><small>{{判型一句话：本轮产出了源码 / 脚本 → 填 9.1；只做了排障 / 配置 / 调研 → 填 9.2。
+   二选一，另一组整段删掉。标准库不列，版本填实测值。}}</small></p>
+
+<h3>9.1&nbsp;代码类：用到的库</h3>
+<table>
+<tr><th>库</th><th>类别</th><th class="n">版本</th><th>在本项目里干什么</th><th>是否可去</th></tr>
+<tr><td><code>{{包名}}</code></td>
+    <td>{{Python 非标准库 / 前端库·直接依赖 / 前端库·CDN / CLI 工具}}</td>
+    <td class="n">{{实测版本}}</td><td>{{一句话}}</td>
+    <td>{{可去 / 不可去，理由}}</td></tr>
+<tr><td><code>{{包名}}</code></td><td>{{…}}</td><td class="n">{{…}}</td>
+    <td>{{…}}</td><td>{{…}}</td></tr>
+</table>
+
+<h3>9.2&nbsp;其它类：用到的技术</h3>
+<table>
+<tr><th>技术</th><th>用在哪一步</th><th>作用</th></tr>
+<tr><td>{{技术名}}</td><td>{{3.3 节 / O5，不写「全局」}}</td><td>{{解决了什么约束}}</td></tr>
+<tr><td>{{技术名}}</td><td>{{…}}</td><td>{{…}}</td></tr>
+</table>
+
+<h3>9.3&nbsp;需要先了解的基础知识点</h3>
+<p><small>{{回到第 1 章结论逐条问「读懂这句要先知道什么」，2~4 条。不许写「无」，不许写「HTML 基础」这类泛称。}}</small></p>
+<table>
+<tr><th>知识点</th><th>一句话定义（≤ 30 字）</th><th>本报告哪里用到</th></tr>
+<tr><td>{{概念}}</td><td>{{机制，不是名称}}</td><td>{{章号 / O 项}}</td></tr>
+<tr><td>{{概念}}</td><td>{{…}}</td><td>{{…}}</td></tr>
+</table>
+
+<p><small>{{收尾声明：哪些结论来自实测、哪些未做、不作「已解决」表述。}}</small></p>
+
+</div></body></html>
