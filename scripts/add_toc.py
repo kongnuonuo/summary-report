@@ -3,13 +3,22 @@
 
 用法:
     python add_toc.py report.html
-    python add_toc.py report.html --width 280 --label 目录
+    python add_toc.py report.html --width 256 --label 目录
 
 行为:
-    - 扫描全部 <h2> / <h3>，按顺序分配锚点 s1、s3-1 ……
-    - 生成两级 <nav id="toc">，默认展开，点 << 收起，收起后左上角浮出 = 按钮
+    - 扫描全部 <h2> / <h3>（**带属性也认**：<h2 id="s1"> / <h2 class="x">），
+      已有的 id 一律沿用不覆盖，并让它参与编号以保证后续 h3 的锚点前缀正确
+    - 生成两级 <nav id="toc">，默认展开，点 << 收起，收起后左上角浮出 ☰ 按钮
     - 滚动时高亮当前小节；< 900 px 视口自动收起；打印时隐藏
     - 文件里已存在 id="toc" 则直接退出，不重复注入
+      （章节重排后要更新目录，先删掉整个 <nav id="toc">…</nav> 再重跑）
+
+坑（实测）:
+    早期版本正则写的是 <(h2|h3)>(.*?)</\\1>，只匹配**无属性**标题。
+    若报告由生成器产出、h2 写成 <h2 id="s1">，则扫到 0 个 h2 →
+    全部条目退化为三级 → 生成循环只收二级 → **静默产出空 <ul></ul> 且返回成功**。
+    判据是脚本自己打印的 `已注入 N 个目录项（h2 x / h3 y）`，x 必须等于章节数；
+    x=0 就是没匹配上，不要去看文件"有没有 nav"。
 
 依赖: 仅标准库。
 """
@@ -117,18 +126,23 @@ def main():
     state = {"h2": 0, "h3": 0}
 
     def repl(m):
-        tag, inner = m.group(1), m.group(2)
+        tag, attrs, inner = m.group(1), m.group(2) or "", m.group(3)
+        # 已有的 id 一律沿用（不覆盖），并让它参与编号，保证后续 h3 的锚点前缀正确
+        mid = re.search(r'id\s*=\s*"([^"]+)"', attrs)
         if tag == "h2":
             state["h2"] += 1
             state["h3"] = 0
-            hid = "s%d" % state["h2"]
+            hid = mid.group(1) if mid else "s%d" % state["h2"]
         else:
             state["h3"] += 1
-            hid = "s%d-%d" % (state["h2"], state["h3"])
+            hid = mid.group(1) if mid else "s%d-%d" % (state["h2"], state["h3"])
         items.append((2 if tag == "h2" else 3, hid, strip_tags(inner)))
-        return '<%s id="%s">%s</%s>' % (tag, hid, inner, tag)
+        if mid:                       # 已有 id：原样返回，不重复加
+            return m.group(0)
+        return '<%s id="%s"%s>%s</%s>' % (tag, hid, attrs, inner, tag)
 
-    h = re.sub(r"<(h2|h3)>(.*?)</\1>", repl, h, flags=re.S)
+    # 兼容 <h2> 与 <h2 id="..."> / <h2 class="..."> 两种写法
+    h = re.sub(r"<(h2|h3)([^>]*)>(.*?)</\1>", repl, h, flags=re.S)
 
     if not items:
         print("未找到 h2/h3，放弃注入")
